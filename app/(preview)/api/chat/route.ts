@@ -12,8 +12,6 @@ export async function POST(req: Request) {
   const { messages } = await req.json();
 
   const openai = createOpenAI({
-    // custom settings, e.g.
-    // compatibility: 'strict', // strict mode, enable when using the OpenAI API
     fetch: fetch
   });
 
