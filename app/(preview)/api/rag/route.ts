@@ -43,11 +43,7 @@ async function storeEmbeddings(fileName: string) {
   // 读取文件内容
   const fileContent = fs.readFileSync(filePath, 'utf-8');
 
-  console.log('fileContent', fileContent)
-
   const chunks = splitText(fileContent, { chunkSize: 500, chunkOverlap: 100 })
-
-  console.log('chunks', chunks)
 
   const openai = createOpenAI({
     fetch: fetch

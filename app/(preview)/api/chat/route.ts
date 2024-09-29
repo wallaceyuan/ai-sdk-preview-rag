@@ -1,4 +1,3 @@
-// import { createResource } from "@/lib/actions/resources";
 import { findRelevantContent } from "@/lib/ai/fileEmbedding";
 import fetch from '@/lib/fetch'
 import { createOpenAI } from "@ai-sdk/openai";
@@ -32,16 +31,6 @@ export async function POST(req: Request) {
     Use your abilities as a reasoning machine to answer questions based on the information you do have.
 `,
     tools: {
-      // addResource: tool({
-      //   description: `add a resource to your knowledge base.
-      //     If the user provides a random piece of knowledge unprompted, use this tool without asking for confirmation.`,
-      //   parameters: z.object({
-      //     content: z
-      //       .string()
-      //       .describe("the content or resource to add to the knowledge base"),
-      //   }),
-      //   execute: async ({ content }) => createResource({ content }),
-      // }),
       getInformation: tool({
         description: `get information from your knowledge base to answer questions.`,
         parameters: z.object({
