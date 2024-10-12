@@ -23,6 +23,7 @@
     "@radix-ui/react-label": "^2.1.0",
     "@radix-ui/react-slot": "^1.1.0",
     "@t3-oss/env-nextjs": "^0.10.1",
+    "ahooks": "^3.8.1",
     "ai": "^3.2.16",
     "antd": "^5.21.3",
     "class-variance-authority": "^0.7.0",

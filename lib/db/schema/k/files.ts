@@ -31,3 +31,6 @@ export const insertFileSchema = createSelectSchema(files)
 
 // Type for resources - used to type API request params and within Components
 export type NewFileContentParams = z.infer<typeof insertFileSchema>;
+
+
+export const selectFileSchema = createSelectSchema(files)

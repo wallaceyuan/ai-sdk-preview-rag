@@ -41,6 +41,19 @@ const splitText = (text: string, options: { chunkSize: number;  chunkOverlap: nu
   return chunks;
 }
 
+
+export const generateKnowledgeEmbeddings = async (
+  value: string,
+  options: { chunkSize: number;  chunkOverlap: number}
+): Promise<Array<{ embedding: number[]; }>> => {
+  const chunks = splitText(value, options);
+  const { embeddings } = await embedMany({
+    model: embeddingModel,
+    values: chunks,
+  });
+  return embeddings.map((e, i) => ({ embedding: e }));
+};
+
 export const generateEmbeddings = async (
   value: string,
   options: { chunkSize: number;  chunkOverlap: number}

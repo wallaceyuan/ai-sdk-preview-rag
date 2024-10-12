@@ -30,7 +30,8 @@ CREATE EXTENSION IF NOT EXISTS "uuid-ossp";
 
 -- 创建 knowledge 表
 CREATE TABLE IF NOT EXISTS  "knowledges" (
-  id UUID PRIMARY KEY DEFAULT uuid_generate_v4(),
+  -- id UUID PRIMARY KEY DEFAULT uuid_generate_v4(),
+  "id" varchar(191) PRIMARY KEY NOT NULL,
   "name" VARCHAR NOT NULL,
   "embedding" TEXT,
   "model" VARCHAR
