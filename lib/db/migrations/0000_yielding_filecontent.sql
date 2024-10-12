@@ -21,3 +21,32 @@ EXCEPTION
 END $$;
 --> statement-breakpoint
 CREATE INDEX IF NOT EXISTS "fileEmbeddingIndex" ON "fileembeddings" USING hnsw ("embedding" vector_cosine_ops);
+
+
+
+
+
+CREATE EXTENSION IF NOT EXISTS "uuid-ossp";
+
+-- 创建 knowledge 表
+CREATE TABLE IF NOT EXISTS  "knowledges" (
+  id UUID PRIMARY KEY DEFAULT uuid_generate_v4(),
+  "name" VARCHAR NOT NULL,
+  "embedding" TEXT,
+  "model" VARCHAR
+);
+
+CREATE TABLE IF NOT EXISTS "files" (
+  "id" varchar(191) PRIMARY KEY NOT NULL,
+  "filename"  text NOT NULL,
+	"content" text NOT NULL,
+	"created_at" timestamp DEFAULT now() NOT NULL,
+	"updated_at" timestamp DEFAULT now() NOT NULL
+);
+
+-- 创建 knowledge_files 关联表
+CREATE TABLE knowledge_files (
+  knowledge_id UUID NOT NULL REFERENCES knowledges(id) ON DELETE CASCADE,
+  file_id UUID NOT NULL REFERENCES files(id) ON DELETE CASCADE,
+  PRIMARY KEY (knowledge_id, file_id)
+);
