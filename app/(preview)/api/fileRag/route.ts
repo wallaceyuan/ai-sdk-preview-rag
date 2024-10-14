@@ -32,7 +32,7 @@ async function storeFile(fileName: string) {
 
 
 export async function GET(request: NextRequest) {
-  storeFile('github-copliot.pdf').catch(console.error);
+  storeFile('mbti.txt').catch(console.error);
   return NextResponse.json({
     body: 'ok'
   });

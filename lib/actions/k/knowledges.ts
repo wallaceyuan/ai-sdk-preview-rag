@@ -1,7 +1,8 @@
 "use server";
 import fs from 'fs';
 import path from 'path';
-import { sql } from "drizzle-orm";
+import { eq, sql } from 'drizzle-orm'
+
 import {
   NewKnowledgeParams,
   insertFileSchema,
@@ -64,7 +65,6 @@ export const createKnowledge = async (input: NewKnowledgeParams) => {
       input.files.map((fileId) => ({ knowledgeId, fileId }))
     );
 
-    console.log('inputinputinput', input.files)
     const data = (await getFileNamesByFileIds(input.files)).filter((f) => input.files.includes(f.id) );
 
     console.log('data', data)
@@ -95,6 +95,18 @@ export const createKnowledge = async (input: NewKnowledgeParams) => {
 };
 
 export const selectKnowledge = async() => {
-  const resource = await db.select().from(knowledges)
-  return resource;
+  const result = await db
+  .select({
+    id: knowledges.id,
+    name: knowledges.name,
+    embedding: knowledges.embedding,
+    model: knowledges.model,
+    files: sql`COALESCE(array_to_json(array_agg(jsonb_build_object('id', ${files.id}, 'filename', ${files.filename}, 'content', ${files.content}))), '[]')`
+  })
+  .from(knowledges)
+  .leftJoin(knowledgeFiles, eq(knowledges.id, knowledgeFiles.knowledgeId))
+  .leftJoin(files, eq(knowledgeFiles.fileId, files.id))
+  .groupBy(knowledges.id, knowledges.name, knowledges.embedding, knowledges.model);
+
+  return result;
 }

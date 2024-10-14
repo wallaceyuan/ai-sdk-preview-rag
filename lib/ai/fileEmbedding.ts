@@ -3,6 +3,8 @@ import { createOpenAI } from "@ai-sdk/openai";
 import fetch from '@/lib/fetch'
 import { cosineDistance, desc, gt, sql, and, eq } from "drizzle-orm";
 import { embeddings } from "../db/schema/fileembeddings";
+import { knowledgefileembeddings } from "../db/schema/k/knowledgefileembeddings";
+
 import { db } from "../db";
 
 const openai = createOpenAI({
@@ -87,4 +89,16 @@ export const findRelevantContent = async (userQuery: string, fileId: string) => 
   return similarGuides;
 };
 
+
+export const findRelevantKnowledgeContent = async (userQuery: string, knowledgeId: string) => {
+  const userQueryEmbedded = await generateEmbedding(userQuery);
+  const similarity = sql<number>`1 - (${cosineDistance(knowledgefileembeddings.embedding, userQueryEmbedded)})`;
+  const similarGuides = await db
+    .select({ similarity })
+    .from(knowledgefileembeddings)
+    .where(and(eq(knowledgefileembeddings.knowledgeId, knowledgeId), gt(similarity, 0.3)))
+    .orderBy((t) => desc(t.similarity))
+    .limit(4);
+  return similarGuides;
+};
 

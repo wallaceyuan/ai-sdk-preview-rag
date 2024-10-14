@@ -12,12 +12,14 @@ import { LoadingIcon } from "@/components/icons";
 import { cn } from "@/lib/utils";
 import { toast } from "sonner";
 
-
-export default function Chat() {
+export default function Chat({ kId }: {  kId: number | undefined}) {
   const [toolCall, setToolCall] = useState<string>();
   const { messages, input, handleInputChange, handleSubmit, isLoading } =
     useChat({
       maxToolRoundtrips: 4,
+      body: {
+        knowledgeId:kId
+      },
       onToolCall({ toolCall }) {
         setToolCall(toolCall.toolName);
       },

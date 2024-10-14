@@ -1,4 +1,4 @@
-import { findRelevantContent } from "@/lib/ai/fileEmbedding";
+import { findRelevantContent, findRelevantKnowledgeContent } from "@/lib/ai/fileEmbedding";
 import fetch from '@/lib/fetch'
 import { createOpenAI } from "@ai-sdk/openai";
 import { convertToCoreMessages, generateObject, streamText, tool } from "ai";
@@ -8,12 +8,14 @@ import { z } from "zod";
 export const maxDuration = 30;
 
 export async function POST(req: Request) {
-  const { messages } = await req.json();
+  const { messages, knowledgeId } = await req.json();
+
+  console.log('knowledgeId', knowledgeId)
 
   const openai = createOpenAI({
     fetch: fetch
   });
-
+  
   const result = await streamText({
     model: openai("gpt-4o"),
     messages: convertToCoreMessages(messages),
@@ -40,14 +42,14 @@ export async function POST(req: Request) {
         execute: async ({ similarQuestions }) => {
           const results = await Promise.all(
             similarQuestions.map(
-              async (question) => await findRelevantContent(question, 'em2wpxcsetpaixgm7uwed'),
+              async (question) => await findRelevantKnowledgeContent(question, knowledgeId),
             ),
           );
           // Flatten the array of arrays and remove duplicates based on 'name'
-          const uniqueResults = Array.from(
-            new Map(results.flat().map((item) => [item?.name, item])).values(),
-          );
-          return uniqueResults;
+          // const uniqueResults = Array.from(
+          //   new Map(results.flat().map((item) => [item?.name, item])).values(),
+          // );
+          return results;
         },
       }),
       understandQuery: tool({

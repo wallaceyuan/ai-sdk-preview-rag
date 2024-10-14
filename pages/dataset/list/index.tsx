@@ -2,10 +2,12 @@ import { useEffect, useState } from 'react'
 import { useRequest } from 'ahooks'
 import { Row, Col, Select, Divider, Empty, Card, Form, Input, Button } from 'antd'
 
+import Chat from './component/Chat'
+
 const getknowledgeList = async () => {
   const response = await fetch('/api/knowledge/knowledgeList')
   const data = await response.json()
-  return data?.knowledges as { id: number; name: string; embedding: string; model: string }[]
+  return data?.knowledges as { files: any[]; id: number; name: string; embedding: string; model: string }[]
 }
 
 const getBookList = async () => {
@@ -22,6 +24,8 @@ export default function Home() {
   const { data, refresh } = useRequest(getknowledgeList)
   const { data: books } = useRequest(getBookList)
 
+  const [ kId, setKId ] = useState<number>();
+
   const createKnowledge = () => {
     form.validateFields().then(values => {
       fetch('/api/knowledge/knowledgeList', {
@@ -31,6 +35,7 @@ export default function Home() {
         },
         body: JSON.stringify(values)
       }).then(response => {
+        form.resetFields()
         response.json()
         refresh()
       })
@@ -38,22 +43,38 @@ export default function Home() {
   }
 
   return (
-    <Row gutter={8}>
+    <Row gutter={30}>
       <Col span={12}>
         <div>
           <h4 style={{ marginBottom: 20 }}>知识库</h4>
-          { data?.length? data?.map(k => (
-            <Card key={k.id} title={k.name}>
-              <p>知识库Id: {k.id}</p>
-              <p>索引模型: {k.embedding}</p>
-              <p>文本理解模型: {k.model}</p>
-            </Card>
-          )): <Empty /> }
+          { data?.length? 
+            <Row gutter={20}>
+              {
+                data.map(k => (
+                  <Col key={k?.id} span={8}>
+                  <Card title={k?.name} hoverable 
+                    onClick={() => setKId(k?.id)}
+                    style={{
+                      cursor: 'pointer',
+                      borderColor: kId === k?.id ? '#1890ff' : '#d9d9d9', // 根据选中状态改变边框颜色
+                      boxShadow: kId === k?.id ? '0 2px 8px rgba(0, 0, 0, 0.1)' : 'none' // 选中时添加阴影效果
+                    }}
+                  >
+                    <p>知识库Id: {k?.id}</p>
+                    <p>索引模型: {k?.embedding}</p>
+                    <p>文本理解模型: {k?.model}</p>
+                    <p>文本: <ul>{k?.files.map(file => (<li key={file.id}>{file.filename}</li>))}</ul></p>
+                  </Card>
+                  </Col>
+                ))
+              }
+            </Row>
+        : <Empty /> }
         </div>
         <Divider />
         <div>
           <h4 style={{ marginBottom: 20 }}>新增知识库</h4>
-          <Form form={form} onFinish={createKnowledge} initialValues={{ embedding: 'text-embedding-ada-002', model: 'gpt-4o',  }}>
+          <Form style={{ width: 300 }}  form={form} onFinish={createKnowledge} initialValues={{ embedding: 'text-embedding-ada-002', model: 'gpt-4o',  }}>
             <Form.Item>
               <Form.Item name='name' label='知识库名称'>
                 <Input placeholder='请输入知识库名称' />
@@ -84,6 +105,7 @@ export default function Home() {
       </Col>
       <Col span={12}>
         <h4 style={{ marginBottom: 20 }}>问答</h4>   
+        <Chat kId={kId} />
       </Col>
     </Row>
   );
