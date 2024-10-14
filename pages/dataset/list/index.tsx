@@ -43,18 +43,21 @@ export default function Home() {
   }
 
   return (
-    <Row gutter={30}>
+    <Row gutter={30} style={{ padding: 20 }}>
       <Col span={12}>
         <div>
-          <h4 style={{ marginBottom: 20 }}>知识库</h4>
+          <h3 style={{ marginBottom: 20 }}>知识库</h3>
           { data?.length? 
             <Row gutter={20}>
               {
                 data.map(k => (
                   <Col key={k?.id} span={8}>
-                  <Card title={k?.name} hoverable 
+                  <Card 
+                    title={k?.name}
+                    hoverable 
                     onClick={() => setKId(k?.id)}
                     style={{
+                      marginBottom: 10,
                       cursor: 'pointer',
                       borderColor: kId === k?.id ? '#1890ff' : '#d9d9d9', // 根据选中状态改变边框颜色
                       boxShadow: kId === k?.id ? '0 2px 8px rgba(0, 0, 0, 0.1)' : 'none' // 选中时添加阴影效果
@@ -73,7 +76,7 @@ export default function Home() {
         </div>
         <Divider />
         <div>
-          <h4 style={{ marginBottom: 20 }}>新增知识库</h4>
+          <h3 style={{ marginBottom: 20 }}>新增知识库</h3>
           <Form style={{ width: 300 }}  form={form} onFinish={createKnowledge} initialValues={{ embedding: 'text-embedding-ada-002', model: 'gpt-4o',  }}>
             <Form.Item>
               <Form.Item name='name' label='知识库名称'>
@@ -104,7 +107,6 @@ export default function Home() {
         </div>
       </Col>
       <Col span={12}>
-        <h4 style={{ marginBottom: 20 }}>问答</h4>   
         <Chat kId={kId} />
       </Col>
     </Row>
