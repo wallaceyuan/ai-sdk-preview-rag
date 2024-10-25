@@ -10,8 +10,6 @@ export const maxDuration = 30;
 export async function POST(req: Request) {
   const { messages, knowledgeId } = await req.json();
 
-  console.log('knowledgeId', knowledgeId)
-
   const openai = createOpenAI({
     fetch: fetch
   });
