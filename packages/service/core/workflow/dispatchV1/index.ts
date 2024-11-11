@@ -77,10 +77,10 @@ export async function dispatchWorkFlowV1({
 }): Promise<DispatchFlowResponse> {
   // set sse response headers
   if (res && stream) {
-    res.setHeader('Content-Type', 'text/event-stream;charset=utf-8');
-    res.setHeader('Access-Control-Allow-Origin', '*');
-    res.setHeader('X-Accel-Buffering', 'no');
-    res.setHeader('Cache-Control', 'no-cache, no-transform');
+    // res.setHeader('Content-Type', 'text/event-stream;charset=utf-8');
+    // res.setHeader('Access-Control-Allow-Origin', '*');
+    // res.setHeader('X-Accel-Buffering', 'no');
+    // res.setHeader('Cache-Control', 'no-cache, no-transform');
   }
 
   variables = {

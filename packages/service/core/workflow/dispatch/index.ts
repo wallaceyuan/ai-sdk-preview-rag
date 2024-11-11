@@ -56,6 +56,8 @@ import { dispatchRunCode } from './code/run';
 import { dispatchTextEditor } from './tools/textEditor';
 import { dispatchCustomFeedback } from './tools/customFeedback';
 import { dispatchReadFiles } from './tools/readFiles';
+import { NextRequest, NextResponse } from 'next/server';
+import { headers } from 'next/headers'
 
 const callbackMap: Record<FlowNodeTypeEnum, Function> = {
   [FlowNodeTypeEnum.workflowStart]: dispatchWorkflowStart,
@@ -107,11 +109,14 @@ export async function dispatchWorkFlow(data: Props): Promise<DispatchFlowRespons
   } = data;
 
   // set sse response headers
-  if (stream && res) {
-    res.setHeader('Content-Type', 'text/event-stream;charset=utf-8');
-    res.setHeader('Access-Control-Allow-Origin', '*');
-    res.setHeader('X-Accel-Buffering', 'no');
-    res.setHeader('Cache-Control', 'no-cache, no-transform');
+  if (stream) {
+    // NextResponse.json({
+
+    // });
+    // headers.set('Content-Type', 'text/event-stream;charset=utf-8');
+    // res.setHeader('Access-Control-Allow-Origin', '*');
+    // res.setHeader('X-Accel-Buffering', 'no');
+    // res.setHeader('Cache-Control', 'no-cache, no-transform');
   }
 
   variables = {
@@ -314,7 +319,7 @@ export async function dispatchWorkFlow(data: Props): Promise<DispatchFlowRespons
   }
   async function nodeRunWithActive(node: RuntimeNodeItemType) {
     // push run status messages
-    if (res && stream && detail && node.showStatus) {
+    if ( stream && detail && node.showStatus) {
       responseStatus({
         res,
         name: node.name,

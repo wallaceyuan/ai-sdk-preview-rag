@@ -4,6 +4,7 @@ import { proxyError, ERROR_RESPONSE, ERROR_ENUM } from '@fastgpt/global/common/e
 import { addLog } from '../system/log';
 import { clearCookie } from '../../support/permission/controller';
 import { replaceSensitiveText } from '@fastgpt/global/common/string/tools';
+import { NextRequest, NextResponse } from 'next/server';
 
 export interface ResponseType<T = any> {
   code: number;
@@ -51,7 +52,7 @@ export const jsonRes = <T = any>(
     addLog.error(`Api response error: ${url}, ${msg}`, error);
   }
 
-  res.status(code).json({
+  return NextResponse.json({
     code,
     statusText: '',
     message: replaceSensitiveText(message || msg),

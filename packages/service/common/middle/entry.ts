@@ -31,7 +31,8 @@ export const NextEntry = ({ beforeCallback = [] }: { beforeCallback?: Promise<an
           addLog.warn(`Request finish ${req.url}, time: ${duration}ms`);
         }
 
-        const contentType = res.getHeader('Content-Type');
+        // const contentType =   res.getHeader('Content-Type');
+        const contentType = 'application/json'
         if ((!contentType || contentType === 'application/json') && !res.writableFinished) {
           return jsonRes(res, {
             code: 200,

@@ -19,17 +19,17 @@ const nextConfig = {
   reactStrictMode: isDev ? false : true,
   compress: true,
   webpack(config, { isServer, nextRuntime }) {
-    // Object.assign(config.resolve.alias, {
-    //   '@mongodb-js/zstd': false,
-    //   '@aws-sdk/credential-providers': false,
-    //   snappy: false,
-    //   aws4: false,
-    //   'mongodb-client-encryption': false,
-    //   kerberos: false,
-    //   'supports-color': false,
-    //   'bson-ext': false,
-    //   'pg-native': false
-    // });
+    Object.assign(config.resolve.alias, {
+      '@mongodb-js/zstd': false,
+      '@aws-sdk/credential-providers': false,
+      snappy: false,
+      aws4: false,
+      'mongodb-client-encryption': false,
+      kerberos: false,
+      'supports-color': false,
+      'bson-ext': false,
+      'pg-native': false
+    });
     config.module = {
       ...config.module,
       rules: config.module.rules.concat([
@@ -88,6 +88,13 @@ const nextConfig = {
 
     return config;
   },
+  serverExternalPackages: ['mongoose', 'pg', '@node-rs/jieba', 'duck-duck-scrape'],
+  // 优化 Server Components 的构建和运行，避免不必要的客户端打包。
+  // experimental: {
+  //   // 优化 Server Components 的构建和运行，避免不必要的客户端打包。
+  //   serverComponentsExternalPackages: ['mongoose', 'pg', '@node-rs/jieba', 'duck-duck-scrape'],
+  //   // outputFileTracingRoot: path.join(__dirname, './')
+  // }
 };
 
 function getWorkerConfig() {
