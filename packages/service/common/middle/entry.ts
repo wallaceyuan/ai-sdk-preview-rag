@@ -3,16 +3,17 @@ import type { NextApiResponse } from 'next';
 import { withNextCors } from './cors';
 import { ApiRequestProps } from '../../type/next';
 import { addLog } from '../system/log';
-import { NextRequest, NextResponse } from 'next/server';
+import { NextResponse } from 'next/server';
+import { NextRequest } from 'next/server'
 
 export type NextApiHandler<T = any> = (
-  req: Request,
+  req: NextRequest,
   // res: NextApiResponse<T>
 ) => unknown | Promise<unknown>;
 
 export const NextEntry = ({ beforeCallback = [] }: { beforeCallback?: Promise<any>[] }) => {
   return (...args: NextApiHandler[]): NextApiHandler => {
-    return async function api(req: Request) {
+    return async function api(req: NextRequest) {
       const start = Date.now();
       addLog.debug(`Request start ${req.url}`);
 

@@ -12,6 +12,7 @@ export async function authUserPer(props: AuthModeType): Promise<
   }
 > {
   const result = await parseHeaderCert(props);
+
   const tmb = await getTmbInfoByTmbId({ tmbId: result.tmbId });
 
   if (!tmb.permission.checkPer(props.per ?? NullPermission)) {
