@@ -25,6 +25,8 @@ const NodeInputSelect = ({
   const renderType = renderTypeList[renderTypeIndex];
   const theme = useTheme();
 
+  console.log('theme', theme)
+
   const inputList = useRef([
     {
       type: FlowNodeInputTypeEnum.reference,
@@ -150,7 +152,7 @@ const NodeInputSelect = ({
           leftIcon={<MyIcon name={renderTypeData.icon as any} w={'0.8rem'} />}
           rightIcon={<MyIcon name={'common/select'} w={'0.8rem'} color={'myGray.500'} />}
           variant={'grayBase'}
-          border={theme.borders.base}
+          border={theme?.borders?.base}
           borderRadius={'xs'}
         >
           <Box fontWeight={'medium'}>{renderTypeData.title}</Box>

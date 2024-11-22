@@ -4,7 +4,7 @@ import { withNextCors } from './cors';
 import { ApiRequestProps } from '../../type/next';
 import { addLog } from '../system/log';
 import { NextResponse } from 'next/server';
-import { NextRequest } from 'next/server'
+import {  NextRequest } from 'next/server'
 
 export type NextApiHandler<T = any> = (
   req: NextRequest,
@@ -42,7 +42,8 @@ export const NextEntry = ({ beforeCallback = [] }: { beforeCallback?: Promise<an
           // });
 
         return NextResponse.json({
-          body: response
+            code: 200,
+            data: response
         });
         // }
       } catch (error) {

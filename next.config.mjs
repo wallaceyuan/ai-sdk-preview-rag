@@ -1,11 +1,15 @@
 /** @type {import('next').NextConfig} */
-import path from 'path';
-import fs from 'fs';
+// const { i18n } = require('./next-i18next.config')
+
 
 const isDev = process.env.NODE_ENV === 'development';
 
 const nextConfig = {
-  // i18n,
+  i18n: {
+    defaultLocale: 'zh',
+    locales: ['en', 'zh'],
+    localeDetection: false
+  },
   output: 'standalone',
   reactStrictMode: isDev ? false : true,
   compress: true,
