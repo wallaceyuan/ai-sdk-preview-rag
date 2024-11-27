@@ -246,7 +246,7 @@ const EditForm = ({
                   bg={'white'}
                   boxShadow={'0 4px 8px -2px rgba(16,24,40,.1),0 2px 4px -2px rgba(16,24,40,.06)'}
                   borderRadius={'md'}
-                  border={theme.borders.base}
+                  border={theme?.borders?.base}
                   cursor={'pointer'}
                   onClick={() =>
                     router.push({

@@ -25,7 +25,7 @@ const PromptTemplate = ({
           {templates.map((item) => (
             <Box
               key={item.title}
-              border={theme.borders.base}
+              border={theme?.borders?.base}
               py={2}
               px={2}
               borderRadius={'md'}

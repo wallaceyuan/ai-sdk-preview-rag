@@ -46,7 +46,7 @@ const TagTextarea = ({ defaultValues, onUpdate, ...props }: Props) => {
       w={'100%'}
       minH={'200px'}
       borderRadius={'md'}
-      border={theme.borders.base}
+      border={theme?.borders?.base}
       p={2}
       fontSize={'sm'}
       bg={'myWhite.600'}

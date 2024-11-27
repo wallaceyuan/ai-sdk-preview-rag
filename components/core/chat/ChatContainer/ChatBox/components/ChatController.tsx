@@ -70,7 +70,7 @@ const ChatController = ({
       {...controlContainerStyle}
       borderRadius={'sm'}
       overflow={'hidden'}
-      border={theme.borders.base}
+      border={theme?.borders?.base}
       // 最后一个子元素，没有border
       css={css({
         '& > *:last-child, & > *:last-child svg': {

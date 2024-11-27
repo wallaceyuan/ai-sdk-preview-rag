@@ -83,7 +83,7 @@ export const QuoteList = React.memo(function QuoteList({
           flex={'1 0 0'}
           p={2}
           borderRadius={'sm'}
-          border={theme.borders.base}
+          border={theme?.borders?.base}
           _notLast={{ mb: 2 }}
           _hover={{ '& .hover-data': { display: 'flex' } }}
           bg={i % 2 === 0 ? 'white' : 'myWhite.500'}

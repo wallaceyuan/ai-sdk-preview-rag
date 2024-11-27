@@ -152,7 +152,7 @@ const SelectCollections = ({
                 <Card
                   key={item._id}
                   p={3}
-                  border={theme.borders.base}
+                  border={theme?.borders?.base}
                   boxShadow={'sm'}
                   cursor={'pointer'}
                   _hover={{

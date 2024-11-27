@@ -6,7 +6,7 @@ import NProgress from 'nprogress'; //nprogress module
 
 import 'nprogress/nprogress.css';
 
-console.log('theme', theme)
+// console.log('theme', theme)
 
 Router.events.on('routeChangeStart', () => NProgress.start());
 Router.events.on('routeChangeComplete', () => NProgress.done());

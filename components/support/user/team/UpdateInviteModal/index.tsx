@@ -70,7 +70,7 @@ const UpdateInviteModal = () => {
           <Flex
             key={item.teamId}
             alignItems={'center'}
-            border={theme.borders.base}
+            border={theme?.borders?.base}
             borderRadius={'md'}
             px={3}
             py={2}

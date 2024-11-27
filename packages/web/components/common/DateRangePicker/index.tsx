@@ -44,7 +44,7 @@ const DateRangePicker = ({
   return (
     <Box position={'relative'} ref={OutRangeRef}>
       <Flex
-        border={theme.borders.base}
+        border={theme?.borders?.base}
         px={3}
         py={1}
         borderRadius={'sm'}

@@ -80,7 +80,7 @@ export const DatasetSelectModal = ({
                   <Card
                     key={item._id}
                     p={3}
-                    border={theme.borders.base}
+                    border={theme?.borders?.base}
                     boxShadow={'sm'}
                     bg={'primary.200'}
                   >
@@ -130,7 +130,7 @@ export const DatasetSelectModal = ({
                   >
                     <Card
                       p={3}
-                      border={theme.borders.base}
+                      border={theme?.borders?.base}
                       boxShadow={'sm'}
                       h={'80px'}
                       cursor={'pointer'}

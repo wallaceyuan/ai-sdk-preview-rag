@@ -60,7 +60,7 @@ const SelectMarkCollection = ({
                     <Card
                       key={item._id}
                       p={3}
-                      border={theme.borders.base}
+                      border={theme?.borders?.base}
                       boxShadow={'sm'}
                       h={'80px'}
                       cursor={'pointer'}

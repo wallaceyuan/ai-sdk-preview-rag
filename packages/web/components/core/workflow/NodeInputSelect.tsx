@@ -25,7 +25,7 @@ const NodeInputSelect = ({
   const renderType = renderTypeList[renderTypeIndex];
   const theme = useTheme();
 
-  console.log('theme', theme)
+  // console.log('theme', theme)
 
   const inputList = useRef([
     {

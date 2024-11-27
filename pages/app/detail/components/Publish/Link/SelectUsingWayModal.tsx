@@ -190,7 +190,7 @@ console.log("Chat box loaded")
           <Flex
             p={3}
             bg={'myWhite.500'}
-            border={theme.borders.base}
+            border={theme?.borders?.base}
             borderTopLeftRadius={'md'}
             borderTopRightRadius={'md'}
           >

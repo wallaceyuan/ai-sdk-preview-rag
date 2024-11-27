@@ -80,7 +80,7 @@ const SelectDatasetRender = ({ inputs = [], item, nodeId }: RenderInputProps) =>
               key={item._id}
               alignItems={'center'}
               h={'36px'}
-              border={theme.borders.base}
+              border={theme?.borders?.base}
               px={2}
               borderRadius={'md'}
             >
