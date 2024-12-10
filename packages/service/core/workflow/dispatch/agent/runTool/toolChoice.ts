@@ -30,6 +30,7 @@ import { AIChatItemType } from '@fastgpt/global/core/chat/type';
 import { updateToolInputValue } from './utils';
 import { computedMaxToken, computedTemperature } from '../../../../ai/utils';
 import { sliceStrStartEnd } from '@fastgpt/global/common/string/tools';
+import { ReadableStreamType } from '../../../../../../../types/app'
 
 type ToolRunResponseType = {
   toolRunResponse: DispatchFlowResponse;
@@ -350,7 +351,7 @@ async function streamResponse({
   toolNodes,
   stream
 }: {
-  res: NextApiResponse;
+  res: ReadableStreamType;
   detail: boolean;
   toolNodes: ToolNodeItemType[];
   stream: StreamChatType;
@@ -370,6 +371,8 @@ async function streamResponse({
     }
 
     const responseChoice = part.choices?.[0]?.delta;
+
+    console.log('responseChoiceresponseChoice', responseChoice)
 
     if (responseChoice?.content) {
       const content = responseChoice.content || '';

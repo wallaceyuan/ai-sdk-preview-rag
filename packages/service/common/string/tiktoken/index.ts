@@ -16,21 +16,22 @@ export const countGptMessagesTokens = async (
   functionCall?: ChatCompletionCreateParams.Function[]
 ) => {
   try {
-    const workerController = getWorkerController<
-      {
-        messages: ChatCompletionMessageParam[];
-        tools?: ChatCompletionTool[];
-        functionCall?: ChatCompletionCreateParams.Function[];
-      },
-      number
-    >({
-      name: WorkerNameEnum.countGptMessagesTokens,
-      maxReservedThreads: global.systemEnv?.tokenWorkers || 20
-    });
+    // const workerController = getWorkerController<
+    //   {
+    //     messages: ChatCompletionMessageParam[];
+    //     tools?: ChatCompletionTool[];
+    //     functionCall?: ChatCompletionCreateParams.Function[];
+    //   },
+    //   number
+    // >({
+    //   name: WorkerNameEnum.countGptMessagesTokens,
+    //   maxReservedThreads: global.systemEnv?.tokenWorkers || 20
+    // });
 
-    const total = await workerController.run({ messages, tools, functionCall });
+    // const total = await workerController.run({ messages, tools, functionCall });
+    // return total;
 
-    return total;
+    return 1000;
   } catch (error) {
     addLog.error('Count token error', error);
     const total = messages.reduce((sum, item) => {

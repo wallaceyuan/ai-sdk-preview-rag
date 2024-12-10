@@ -62,6 +62,8 @@ export const dispatchHttp468Request = async (props: HttpRequestProps): Promise<H
     }
   } = props;
 
+  console.log('bodybodybodybody', body);
+
   if (!httpReqUrl) {
     return Promise.reject('Http url is empty');
   }

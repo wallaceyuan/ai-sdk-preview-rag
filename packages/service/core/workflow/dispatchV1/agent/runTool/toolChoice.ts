@@ -221,7 +221,9 @@ export const runToolWithToolChoice = async (
       ...filterMessages,
       assistantToolMsgParams
     ] as ChatCompletionMessageParam[];
-    const tokens = await countGptMessagesTokens(concatToolMessages, tools);
+    // const tokens = await countGptMessagesTokens(concatToolMessages, tools);
+    const tokens = 10;
+
     const completeMessages = [
       ...concatToolMessages,
       ...toolsRunResponse.map((item) => item?.toolMsgParams)

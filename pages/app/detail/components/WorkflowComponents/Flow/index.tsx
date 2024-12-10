@@ -43,6 +43,8 @@ const nodeTypes: Record<FlowNodeTypeEnum, any> = {
   [FlowNodeTypeEnum.classifyQuestion]: dynamic(() => import('./nodes/NodeCQNode')),
   [FlowNodeTypeEnum.contentExtract]: dynamic(() => import('./nodes/NodeExtract')),
   [FlowNodeTypeEnum.httpRequest468]: dynamic(() => import('./nodes/NodeHttp')),
+  [FlowNodeTypeEnum.httpRequestChat]: dynamic(() => import('./nodes/NodeHttp')),
+
   [FlowNodeTypeEnum.runApp]: NodeSimple,
   [FlowNodeTypeEnum.pluginInput]: dynamic(() => import('./nodes/NodePluginIO/PluginInput')),
   [FlowNodeTypeEnum.pluginOutput]: dynamic(() => import('./nodes/NodePluginIO/PluginOutput')),
@@ -64,6 +66,7 @@ const edgeTypes = {
 const Workflow = () => {
   const { nodes, edges, reactFlowWrapper } = useContextSelector(WorkflowContext, (v) => v);
 
+  console.log('nodes', nodes)
   const {
     ConfirmDeleteModal,
     handleNodesChange,

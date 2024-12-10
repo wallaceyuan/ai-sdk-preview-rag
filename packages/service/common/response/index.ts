@@ -4,6 +4,7 @@ import { proxyError, ERROR_RESPONSE, ERROR_ENUM } from '@fastgpt/global/common/e
 import { addLog } from '../system/log';
 import { clearCookie } from '../../support/permission/controller';
 import { replaceSensitiveText } from '@fastgpt/global/common/string/tools';
+import { ReadableStreamType } from '../../../../types/app';
 
 export interface ResponseType<T = any> {
   code: number;
@@ -59,7 +60,7 @@ export const jsonRes = <T = any>(
   });
 };
 
-export const sseErrRes = (res: NextApiResponse, error: any) => {
+export const sseErrRes = (res: ReadableStreamType, error: any) => {
   const errResponseKey = typeof error === 'string' ? error : error?.message;
 
   // Specified error
@@ -100,7 +101,7 @@ export function responseWriteController({
   res,
   readStream
 }: {
-  res: NextApiResponse;
+  res: ReadableStreamType;
   readStream: any;
 }) {
   res.on('drain', () => {
@@ -121,7 +122,7 @@ export function responseWrite({
   event,
   data
 }: {
-  res?: NextApiResponse;
+  res?: ReadableStreamType;
   write?: (text: string) => void;
   event?: string;
   data: string;
@@ -139,7 +140,7 @@ export const responseWriteNodeStatus = ({
   status = 'running',
   name
 }: {
-  res?: NextApiResponse;
+  res?: ReadableStreamType;
   status?: 'running';
   name: string;
 }) => {

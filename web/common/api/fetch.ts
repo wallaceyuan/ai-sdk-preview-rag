@@ -4,7 +4,6 @@ import type { ChatHistoryItemResType } from '@fastgpt/global/core/chat/type.d';
 import type { StartChatFnProps } from '@/components/core/chat/ChatContainer/type';
 import { DispatchNodeResponseKeyEnum } from '@fastgpt/global/core/workflow/runtime/constants';
 import {
-  // refer to https://github.com/ChatGPTNextWeb/ChatGPT-Next-Web
   EventStreamContentType,
   fetchEventSource
 } from '@fortaine/fetch-event-source';
@@ -113,7 +112,8 @@ export const streamFetch = ({
       const requestData = {
         method: 'POST',
         headers: {
-          'Content-Type': 'application/json'
+          'Content-Type': 'application/json',
+          'authorization': `eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpZCI6MjUsImlwIjoiIiwibmlja25hbWUiOiLoooHlnIYiLCJvcmdhbml6YXRpb25JZCI6MSwidHMiOjE3MzM3OTgyNTEsInVzZXJBZ2VudCI6IiIsInVzZXJuYW1lIjoiMTM2NzE4Nzk3MjMifQ.RYg5MlZa5gBB8FT1E_rmrInsyaf_wi9hM5T8AgmoE1E`,
         },
         signal: abortCtrl.signal,
         body: JSON.stringify({
@@ -130,12 +130,10 @@ export const streamFetch = ({
         async onopen(res) {
           clearTimeout(timeoutId);
           const contentType = res.headers.get('content-type');
-
           // not stream
           if (contentType?.startsWith('text/plain')) {
             return failedFinish(await res.clone().text());
           }
-
           // failed stream
           if (
             !res.ok ||
@@ -153,6 +151,7 @@ export const streamFetch = ({
           }
         },
         onmessage({ event, data }) {
+          console.log('event, data event, data event, data event, data event, data ', event, data )
           if (data === '[DONE]') {
             return;
           }

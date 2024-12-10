@@ -1048,7 +1048,7 @@ export const workflowTemplates: TemplateType = [
             key: 'questionGuide',
             valueType: 'boolean',
             renderTypeList: ['hidden'],
-            label: 'core.app.Question Guide',
+            label: 'core.app.Question Guide', //猜你想问
             value: false
           },
           {

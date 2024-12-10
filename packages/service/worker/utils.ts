@@ -119,6 +119,8 @@ export class WorkerPool<Props = Record<string, any>, Response = any> {
   }
 
   run(data: Props) {
+
+    console.log('runTaskrunTaskrunTaskrunTask')
     // watch memory
     addLog.debug(`${this.name} worker queueLength: ${this.workerQueue.length}`);
 

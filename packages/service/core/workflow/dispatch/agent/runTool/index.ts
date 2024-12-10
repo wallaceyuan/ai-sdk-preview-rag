@@ -72,7 +72,12 @@ export const dispatchRunTools = async (props: DispatchToolModuleProps): Promise<
     params: { model, systemPrompt, userChatInput, history = 6 }
   } = props;
 
+  console.log('dispatchRunToolsdispatchRunTools')
+  
   const toolModel = getLLMModel(model);
+
+  console.log('toolModel', toolModel)
+
   const chatHistories = getHistories(history, histories);
 
   /* get tool params */
@@ -119,7 +124,7 @@ export const dispatchRunTools = async (props: DispatchToolModuleProps): Promise<
     }
   ];
 
-  // console.log(JSON.stringify(messages, null, 2));
+  console.log(JSON.stringify(messages, null, 2));
 
   const {
     dispatchFlowResponse, // tool flow response
@@ -129,7 +134,10 @@ export const dispatchRunTools = async (props: DispatchToolModuleProps): Promise<
   } = await (async () => {
     const adaptMessages = chats2GPTMessages({ messages, reserveId: false });
 
+    console.log('adaptMessagesadaptMessagesadaptMessages', adaptMessages)
     if (toolModel.toolChoice) {
+      console.log('toolModel.toolChoicetoolModel.toolChoice');
+
       return runToolWithToolChoice({
         ...props,
         toolNodes,
@@ -138,6 +146,9 @@ export const dispatchRunTools = async (props: DispatchToolModuleProps): Promise<
       });
     }
     if (toolModel.functionCall) {
+
+      console.log('toolModel.functionCall.toolModel.functionCall');
+
       return runToolWithFunctionCall({
         ...props,
         toolNodes,
@@ -164,6 +175,8 @@ export const dispatchRunTools = async (props: DispatchToolModuleProps): Promise<
     } else {
       return Promise.reject('Prompt call invalid input');
     }
+
+    console.log('runToolWithPromptCallrunToolWithPromptCall')
 
     return runToolWithPromptCall({
       ...props,

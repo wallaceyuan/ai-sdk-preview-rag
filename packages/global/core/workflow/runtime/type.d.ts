@@ -17,11 +17,14 @@ import { AppDetailType, AppSchema } from '../../app/type';
 import { RuntimeNodeItemType } from '../runtime/type';
 import { RuntimeEdgeItemType } from './edge';
 import { ReadFileNodeResponse } from '../template/system/readFiles/type';
+import { NextResponse } from 'next/server'
+import { ReadableStreamType } from '../../../../../types/app'
 
 /* workflow props */
 export type ChatDispatchProps = {
-  res?: NextApiResponse;
+  res?: ReadableStreamType;
   requestOrigin?: string;
+  authorization?: string;
   mode: 'test' | 'chat' | 'debug';
   teamId: string;
   tmbId: string;

@@ -8,6 +8,7 @@ import { AssignedAnswerModule } from './system/assignedAnswer';
 import { ClassifyQuestionModule } from './system/classifyQuestion/index';
 import { ContextExtractModule } from './system/contextExtract/index';
 import { HttpNode468 } from './system/http468';
+import { HttpNodeChat } from './system/httpChat';
 
 import { ToolModule } from './system/tools';
 import { StopToolNode } from './system/stopTool';
@@ -39,6 +40,7 @@ const systemNodes: FlowNodeTemplateType[] = [
   ContextExtractModule,
   ReadFilesNodes,
   HttpNode468,
+  HttpNodeChat,
   AiQueryExtension,
   LafModule,
   IfElseNode,

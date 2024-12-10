@@ -105,6 +105,8 @@ export enum FlowNodeTypeEnum {
   classifyQuestion = 'classifyQuestion',
   contentExtract = 'contentExtract',
   httpRequest468 = 'httpRequest468',
+  httpRequestChat = 'httpRequestChat',
+
   runApp = 'app',
   pluginModule = 'pluginModule',
   pluginInput = 'pluginInput',

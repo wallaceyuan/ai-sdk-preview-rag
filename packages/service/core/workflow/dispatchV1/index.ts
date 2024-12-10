@@ -26,6 +26,8 @@ import { dispatchClassifyQuestion } from './agent/classifyQuestion';
 import { dispatchContentExtract } from './agent/extract';
 import { dispatchHttpRequest } from './tools/http';
 import { dispatchHttp468Request } from './tools/http468';
+import { dispatchHttp468Request } from './tools/http';
+
 import { dispatchAppRequest } from './tools/runApp';
 import { dispatchQueryExtension } from './tools/queryExternsion';
 import { dispatchRunPlugin } from './plugin/run';
@@ -48,6 +50,8 @@ const callbackMap: Record<string, Function> = {
   [FlowNodeTypeEnum.classifyQuestion]: dispatchClassifyQuestion,
   [FlowNodeTypeEnum.contentExtract]: dispatchContentExtract,
   [FlowNodeTypeEnum.httpRequest468]: dispatchHttp468Request,
+  [FlowNodeTypeEnum.httpRequestChat]: dispatchHttp468Request,
+
   [FlowNodeTypeEnum.runApp]: dispatchAppRequest,
   [FlowNodeTypeEnum.pluginModule]: dispatchRunPlugin,
   [FlowNodeTypeEnum.pluginInput]: dispatchPluginInput,

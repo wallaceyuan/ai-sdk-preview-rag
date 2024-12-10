@@ -29,6 +29,8 @@ import { dispatchAnswer } from './tools/answer';
 import { dispatchClassifyQuestion } from './agent/classifyQuestion';
 import { dispatchContentExtract } from './agent/extract';
 import { dispatchHttp468Request } from './tools/http468';
+import { dispatchHttpChatRequest } from './tools/httpChat';
+
 import { dispatchAppRequest } from './tools/runApp';
 import { dispatchQueryExtension } from './tools/queryExternsion';
 import { dispatchRunPlugin } from './plugin/run';
@@ -56,6 +58,8 @@ import { dispatchRunCode } from './code/run';
 import { dispatchTextEditor } from './tools/textEditor';
 import { dispatchCustomFeedback } from './tools/customFeedback';
 import { dispatchReadFiles } from './tools/readFiles';
+import { NextResponse } from 'next/server';
+import { ReadableStreamType } from '../../../../../types/app'
 
 const callbackMap: Record<FlowNodeTypeEnum, Function> = {
   [FlowNodeTypeEnum.workflowStart]: dispatchWorkflowStart,
@@ -66,6 +70,7 @@ const callbackMap: Record<FlowNodeTypeEnum, Function> = {
   [FlowNodeTypeEnum.classifyQuestion]: dispatchClassifyQuestion,
   [FlowNodeTypeEnum.contentExtract]: dispatchContentExtract,
   [FlowNodeTypeEnum.httpRequest468]: dispatchHttp468Request,
+  [FlowNodeTypeEnum.httpRequestChat]: dispatchHttpChatRequest,
   [FlowNodeTypeEnum.runApp]: dispatchAppRequest,
   [FlowNodeTypeEnum.pluginModule]: dispatchRunPlugin,
   [FlowNodeTypeEnum.pluginInput]: dispatchPluginInput,
@@ -103,16 +108,17 @@ export async function dispatchWorkFlow(data: Props): Promise<DispatchFlowRespons
     user,
     stream = false,
     detail = false,
+    authorization,
     ...props
   } = data;
 
   // set sse response headers
-  if (stream && res) {
-    res.setHeader('Content-Type', 'text/event-stream;charset=utf-8');
-    res.setHeader('Access-Control-Allow-Origin', '*');
-    res.setHeader('X-Accel-Buffering', 'no');
-    res.setHeader('Cache-Control', 'no-cache, no-transform');
-  }
+  // if (stream && res) {
+  //   res.setHeader('Content-Type', 'text/event-stream;charset=utf-8');
+  //   res.setHeader('Access-Control-Allow-Origin', '*');
+  //   res.setHeader('X-Accel-Buffering', 'no');
+  //   res.setHeader('Cache-Control', 'no-cache, no-transform');
+  // }
 
   variables = {
     ...getSystemVariable(data),
@@ -219,6 +225,7 @@ export async function dispatchWorkFlow(data: Props): Promise<DispatchFlowRespons
           runtimeEdges
         });
 
+        if (props.maxRunTimes <= 0) return;
         if (res?.closed || props.maxRunTimes <= 0) return;
         props.maxRunTimes--;
         addLog.debug(`Run node`, { maxRunTimes: props.maxRunTimes, uid: user._id });
@@ -313,12 +320,14 @@ export async function dispatchWorkFlow(data: Props): Promise<DispatchFlowRespons
     return params;
   }
   async function nodeRunWithActive(node: RuntimeNodeItemType) {
+
+    console.log('nodeRunWithActivenodeRunWithActivenodeRunWithActive', res,stream ,detail ,node.showStatus)
     // push run status messages
     if (res && stream && detail && node.showStatus) {
       responseStatus({
         res,
         name: node.name,
-        status: 'running'
+        status: 'running',
       });
     }
     const startTime = Date.now();
@@ -340,6 +349,7 @@ export async function dispatchWorkFlow(data: Props): Promise<DispatchFlowRespons
       runtimeNodes,
       runtimeEdges,
       params,
+      authorization,
       mode: props.mode === 'debug' ? 'test' : props.mode
     };
 
@@ -432,16 +442,16 @@ export async function dispatchWorkFlow(data: Props): Promise<DispatchFlowRespons
 export function responseStatus({
   res,
   status,
-  name
+  name,
 }: {
-  res: NextApiResponse;
+  res: ReadableStreamType;
   status?: 'running' | 'finish';
   name?: string;
 }) {
   if (!name) return;
   responseWriteNodeStatus({
     res,
-    name
+    name,
   });
 }
 

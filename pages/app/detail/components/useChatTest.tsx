@@ -41,6 +41,8 @@ export const useChatTest = ({
       /* get histories */
       const historyMaxLen = getMaxHistoryLimitFromNodes(nodes);
 
+      console.log('historyMaxLen', historyMaxLen, 'messages', messages)
+
       // 流请求，获取数据
       const { responseText, responseData } = await streamFetch({
         url: '/api/core/chat/chatTest',

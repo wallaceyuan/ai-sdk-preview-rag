@@ -44,3 +44,12 @@ export type AppLogsListItemType = {
   customFeedbacksCount: number;
   markCount: number;
 };
+
+
+export type ReadableStreamType = {
+  write(chunk: string | Uint8Array): Uint8Array;
+  end(): void;
+  readonly closed: boolean;
+  on(event: "close" | "error" | "drain", callback: (...args: any[]) => void): void;
+  triggerError(err: Error): void;
+}

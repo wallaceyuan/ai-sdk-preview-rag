@@ -1,0 +1,11 @@
+{
+  "i18n-ally.localesPaths": [
+    "public/locales",
+    "web/i18n",
+    "scripts/i18n",
+    "fastgpt/web/i18n",
+    "packages/web/i18n",
+    "fastgpt/web/components/common/Icon/icons/common/language",
+    "packages/web/components/common/Icon/icons/common/language"
+  ]
+}

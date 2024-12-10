@@ -64,3 +64,67 @@ export const NextEntry = ({ beforeCallback = [] }: { beforeCallback?: Promise<an
     };
   };
 };
+
+
+export const NextEntryStream = ({ beforeCallback = [] }: { beforeCallback?: Promise<any>[] }) => {
+  return (...args: NextApiHandler[]): NextApiHandler => {
+    return async function api(req: NextRequest) {
+      const start = Date.now();
+      addLog.debug(`Request start ${req.url}`);
+
+      try {
+        // await Promise.all([withNextCors(req, res), ...beforeCallback]);
+        await Promise.all([...beforeCallback]);
+
+        let response: any = null;
+        for (const handler of args) {
+          response = await handler(req);
+        }
+
+        return new NextResponse(response, {
+          headers: {
+            'Content-Type': 'text/event-stream;charset=utf-8',
+            'Access-Control-Allow-Origin': '*',
+            'X-Accel-Buffering': 'no',
+            'Cache-Control': 'no-cache, no-transform'
+          }
+        });
+
+        // Get request duration
+        // const duration = Date.now() - start;
+        // if (duration < 2000) {
+        //   addLog.debug(`Request finish ${req.url}, time: ${duration}ms`);
+        // } else {
+        //   addLog.warn(`Request finish ${req.url}, time: ${duration}ms`);
+        // }
+
+        // // const contentType = res.getHeader('Content-Type');
+        // // if ((!contentType || contentType === 'application/json') && !res.writableFinished) {
+        //   // return jsonRes(res, {
+        //   //   code: 200,
+        //   //   data: response
+        //   // });
+
+        // return NextResponse.json({
+        //     code: 200,
+        //     data: response
+        // });
+        // }
+      } catch (error) {
+
+        return NextResponse.json({
+          body: {
+            code: 500,
+            error,
+            url: req.url
+          }
+        });
+        // return jsonRes(res, {
+        //   code: 500,
+        //   error,
+        //   url: req.url
+        // });
+      }
+    };
+  };
+};

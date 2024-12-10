@@ -13,6 +13,8 @@ import MyIcon from '../Icon';
 import MyBox from '../MyBox';
 import { useSystem } from '../../../hooks/useSystem';
 import Avatar from '../Avatar';
+import styles from 'react-day-picker/dist/style.css';
+import './index.css'
 
 export interface MyModalProps extends ModalContentProps {
   iconSrc?: string;
@@ -40,6 +42,7 @@ const MyModal = ({
   const isPc = useSystem();
 
   return (
+    <div className={'modalContainer'}>
     <Modal
       isOpen={isOpen}
       onClose={() => onClose && onClose()}
@@ -47,15 +50,20 @@ const MyModal = ({
       isCentered={isPc ? isCentered : true}
       blockScrollOnMount={false}
       closeOnOverlayClick={closeOnOverlayClick}
+      styleConfig={{
+        zIndex: 1000,
+        justifyContent: 'center'
+      }}
     >
-      <ModalOverlay />
-      <ModalContent
+     <ModalOverlay />
+     <ModalContent
         w={w}
         minW={['90vw', '400px']}
         maxW={maxW}
         position={'relative'}
         maxH={'85vh'}
         boxShadow={'7'}
+        zIndex={1000}
         {...props}
       >
         {!title && onClose && <ModalCloseButton zIndex={1} />}
@@ -102,6 +110,7 @@ const MyModal = ({
         </MyBox>
       </ModalContent>
     </Modal>
+    </div>
   );
 };
 

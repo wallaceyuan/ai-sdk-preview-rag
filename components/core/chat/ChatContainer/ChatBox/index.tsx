@@ -472,6 +472,8 @@ const ChatBox = (
               variables: requestVariables
             });
 
+            console.log("responseData,responseText,", responseData,responseText)
+
             isNewChatReplace.current = isNewChat;
 
             // set finish status
