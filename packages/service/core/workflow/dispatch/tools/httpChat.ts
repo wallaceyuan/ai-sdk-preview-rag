@@ -19,6 +19,13 @@ import { responseWrite } from '../../../../common/response';
 import { textAdaptGptResponse } from '@fastgpt/global/core/workflow/runtime/utils';
 import { getSystemPluginCb } from '../../../../../plugins/register';
 
+import type { NextApiResponse } from 'next';
+import type {
+  StreamChatType
+} from '@fastgpt/global/core/ai/type.d';
+import { responseWriteController } from '../../../../common/response';
+
+
 type PropsArrType = {
   key: string;
   type: string;
@@ -40,6 +47,7 @@ type HttpResponse = DispatchNodeResultType<{
 }>;
 
 const UNDEFINED_SIGN = 'UNDEFINED_SIGN';
+
 
 export const dispatchHttpChatRequest = async (props: HttpRequestProps): Promise<HttpResponse> => {
   let {
@@ -112,9 +120,9 @@ export const dispatchHttpChatRequest = async (props: HttpRequestProps): Promise<
     return acc;
   }, {});
 
-  const requestBody = await (() => {
-    if (!httpJsonBody || httpJsonBody.length === 0) return {};
 
+  const requestBody = await (() => {
+    if (!httpJsonBody) return {};
     try {
       httpJsonBody = replaceVariable(httpJsonBody, allVariables);
       const jsonParse = JSON.parse(httpJsonBody);
@@ -136,13 +144,14 @@ export const dispatchHttpChatRequest = async (props: HttpRequestProps): Promise<
           rawResponse: pluginResult
         };
       }
-      console.log('--------------fetchStreamData----------------------------')
-      return fetchData({
+      return await fetchStreamData({
         method: httpMethod,
         url: httpReqUrl,
         headers,
         body: requestBody,
-        params
+        params,
+        res,
+        detail
       });
     })();
 
@@ -164,39 +173,17 @@ export const dispatchHttpChatRequest = async (props: HttpRequestProps): Promise<
       });
     }
 
-    let fullMessage = '';
-    rawResponse.split('\n').forEach(chunk => {
-      try {
-        if(chunk === ''  || chunk === 'data: [DONE]'){
-          return;
-        }
-
-        const jsonData = JSON.parse(chunk.replace('data: ', '').trim());
-
-        if (jsonData.choices && jsonData.choices.length > 0) {
-          const content = jsonData.choices[0].delta.content;
-          if (content) {
-            fullMessage += content;
-          }
-        }
-      } catch (error) {
-        console.error('Failed to parse chunk:', chunk );
-      }
-    });
-    
-    console.log('Full message:', fullMessage);
-
     return {
       [DispatchNodeResponseKeyEnum.nodeResponse]: {
         totalPoints: 0,
         params: Object.keys(params).length > 0 ? params : undefined,
         body: Object.keys(requestBody).length > 0 ? requestBody : undefined,
         headers: Object.keys(headers).length > 0 ? headers : undefined,
-        httpResult: fullMessage
+        httpResult: rawResponse
       },
       [DispatchNodeResponseKeyEnum.toolResponses]:
         Object.keys(results).length > 0 ? results : rawResponse,
-      [NodeOutputKeyEnum.httpRawResponse]: fullMessage,
+      [NodeOutputKeyEnum.httpRawResponse]: rawResponse,
       ...results
     };
   } catch (error) {
@@ -215,109 +202,95 @@ export const dispatchHttpChatRequest = async (props: HttpRequestProps): Promise<
   }
 };
 
-async function fetchData({
+async function fetchStreamData({
+  res,
   method,
   url,
   headers,
   body,
-  params
+  params,
+  detail
 }: {
+  res: NextApiResponse;
   method: string;
   url: string;
   headers: Record<string, any>;
   body: Record<string, any>;
   params: Record<string, any>;
+  detail: boolean;
 }) {
-  const { data: response } = await axios({
-    method,
-    baseURL: `http://${SERVICE_LOCAL_HOST}`,
-    url,
-    headers: {
-      'Content-Type': 'application/json',
-      ...headers
-    },
-    timeout: 120000,
-    params: params,
-    data: ['POST', 'PUT', 'PATCH'].includes(method) ? body : undefined
-  });
 
-  /*
-    parse the json:
-    {
-      user: {
-        name: 'xxx',
-        age: 12
-      },
-      list: [
-        {
-          name: 'xxx',
-          age: 50
-        },
-        [{ test: 22 }]
-      ],
-      psw: 'xxx'
-    }
+ return new Promise(async(resolve, reject) => {
 
-    result: {
-      'user': { name: 'xxx', age: 12 },
-      'user.name': 'xxx',
-      'user.age': 12,
-      'list': [ { name: 'xxx', age: 50 }, [ [Object] ] ],
-      'list[0]': { name: 'xxx', age: 50 },
-      'list[0].name': 'xxx',
-      'list[0].age': 50,
-      'list[1]': [ { test: 22 } ],
-      'list[1][0]': { test: 22 },
-      'list[1][0].test': 22,
-      'psw': 'xxx'
-    }
-  */
-  const parseJson = (obj: Record<string, any>, prefix = '') => {
-    let result: Record<string, any> = {};
+    let answerText = '';
 
-    if (Array.isArray(obj)) {
-      for (let i = 0; i < obj.length; i++) {
-        result[`${prefix}[${i}]`] = obj[i];
+    // 使用 axios 发起请求并获取响应
+    const response = await axios({
+      method: method,
+      url: url,
+      headers,
+      data: body,
+      params: params,
+      responseType: 'stream' // 确保响应是流的形式
+    });
 
-        if (Array.isArray(obj[i])) {
-          result = {
-            ...result,
-            ...parseJson(obj[i], `${prefix}[${i}]`)
-          };
-        } else if (typeof obj[i] === 'object') {
-          result = {
-            ...result,
-            ...parseJson(obj[i], `${prefix}[${i}].`)
-          };
+    const stream = response.data;
+
+    const write = responseWriteController({
+      res,
+      readStream: stream
+    });
+
+    console.log('params?.show ', params?.show , typeof params?.show )
+    
+    stream.on('data', (chunk) => {
+      try {
+        // if (res.closed) {
+        //   stream.controller?.abort();
+        //   return;
+        // }
+        if(chunk === ''  || chunk === 'data: [DONE]'){
+          return;
         }
-      }
-    } else if (typeof obj == 'object') {
-      for (const key in obj) {
-        result[`${prefix}${key}`] = obj[key];
-
-        if (Array.isArray(obj[key])) {
-          result = {
-            ...result,
-            ...parseJson(obj[key], `${prefix}${key}`)
-          };
-        } else if (typeof obj[key] === 'object') {
-          result = {
-            ...result,
-            ...parseJson(obj[key], `${prefix}${key}.`)
-          };
+        const str = chunk.toString('utf8');
+        console.log('strstrstrstrstrstrstr', str)
+        const jsonData = JSON.parse(str.replace('data: ', '').trim());
+        if (jsonData.choices && jsonData.choices.length > 0) {
+          const content = jsonData.choices[0].delta.content;
+          if (content) {
+            answerText += content
+            responseWrite({
+              write,
+              event: params?.show === 'true' ? SseResponseEventEnum.answer : undefined,
+              data: textAdaptGptResponse({
+                text: content
+              })
+            });
+          }
         }
+      } catch (error) {
+        console.error('Failed to parse chunk:', chunk );
       }
-    }
-
-    return result;
-  };
-
-  return {
-    formatResponse:
-      typeof response === 'object' && !Array.isArray(response) ? parseJson(response) : {},
-    rawResponse: response
-  };
+    });
+  
+    // 通过监听 'end' 事件来处理流结束的情况
+    stream.on('end', () => {
+      console.log('Stream ended');
+      
+      resolve({
+        formatResponse: answerText,
+        rawResponse: answerText
+      })
+    });
+  
+    // 处理可能的错误
+    stream.on('error', (err) => {
+      console.error("Stream error:", err);
+      reject('stream error')
+    });
+ })
 }
+
 
 function replaceVariable(text: string, obj: Record<string, any>) {
   for (const [key, value] of Object.entries(obj)) {

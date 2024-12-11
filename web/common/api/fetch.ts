@@ -113,7 +113,7 @@ export const streamFetch = ({
         method: 'POST',
         headers: {
           'Content-Type': 'application/json',
-          'authorization': `eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpZCI6MjUsImlwIjoiIiwibmlja25hbWUiOiLoooHlnIYiLCJvcmdhbml6YXRpb25JZCI6MSwidHMiOjE3MzM3OTgyNTEsInVzZXJBZ2VudCI6IiIsInVzZXJuYW1lIjoiMTM2NzE4Nzk3MjMifQ.RYg5MlZa5gBB8FT1E_rmrInsyaf_wi9hM5T8AgmoE1E`,
+          'authorization': `eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpZCI6MjUsImlwIjoiIiwibmlja25hbWUiOiLoooHlnIYiLCJvcmdhbml6YXRpb25JZCI6MSwidHMiOjE3MzM4ODY0ODYsInVzZXJBZ2VudCI6IiIsInVzZXJuYW1lIjoiMTM2NzE4Nzk3MjMifQ.vBkdQ09auQPkAfpXe6Esxdlfn275l5JdXdUcXJY3NHc`,
         },
         signal: abortCtrl.signal,
         body: JSON.stringify({
